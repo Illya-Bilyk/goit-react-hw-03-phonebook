@@ -1,17 +1,12 @@
 import { Component } from 'react';
-import { ContactForm } from './ContactForm/ContactForm';
-import { ContactList } from './ContactList/ContactList';
-import { Filter } from './Filter/Filter';
+import { ContactForm } from './ContactForm';
+import { ContactList } from './ContactList';
+import { Filter } from './Filter';
 import { FormWrap, TitlePhone, TitleContact } from './App.styled';
 
 export class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
   handleSubmit = newContact => {
@@ -31,8 +26,21 @@ export class App extends Component {
 
   filterContacs = keyWord => {
     this.setState({ filter: keyWord });
-    // console.log(this.newContactList());
   };
+
+  componentDidUpdate() {
+    const { contacts } = this.state;
+    const contactsLS = JSON.stringify(contacts);
+    localStorage.setItem('contacts', contactsLS);
+  }
+  componentDidMount() {
+    const contFromLS = localStorage.getItem('contacts');
+    const Parsedcontacts = JSON.parse(contFromLS);
+
+    if (Parsedcontacts !== null) {
+      this.setState({ contacts: Parsedcontacts });
+    }
+  }
 
   newContactList = () => {
     const { filter, contacts } = this.state;
